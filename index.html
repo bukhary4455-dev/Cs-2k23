@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14213d"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
+<title>CS-2K23</title>
+<style>
+:root{--bg:#eef2f6;--card:#fff;--ink:#14213d;--mute:#5b6b82;--line:#d9e1ea;--gold:#e0a526;--red:#d64545;--onink:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1526;--card:#16223a;--ink:#eaf0f8;--mute:#9db0c9;--line:#26365a;--onink:#0d1526}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#app{display:flex;flex-direction:column;height:100%;max-width:560px;margin:0 auto}
+main{flex:1;overflow-y:auto;padding:14px}
+.fade{animation:in .35s ease both}@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;color:#fff;padding:20px 18px 24px;background:linear-gradient(120deg,#14213d,#27407a,#14213d,#3a2a6b);background-size:300% 300%;animation:flow 12s ease infinite}
+@keyframes flow{50%{background-position:100% 50%}}
+.orb{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(224,165,38,.55),transparent 70%);animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:translate(18px,-14px) scale(1.15)}}
+.hero b{font:700 24px Georgia,serif;position:relative}.hero small{display:block;opacity:.8;position:relative}
+.motd{position:relative;margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border-left:4px solid var(--gold)}
+.motd em{display:block;font-size:12px;opacity:.75;font-style:normal}
+.stats{display:flex;gap:10px;margin-bottom:14px}.stat{flex:1;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 4px}
+.stat b{display:block;font:700 26px Georgia,serif;color:var(--gold)}.stat span{font-size:12px;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card.ad{border-color:var(--gold);box-shadow:0 0 0 2px rgba(224,165,38,.25)}
+.row{display:flex;gap:12px;align-items:flex-start}.mid{align-items:center}
+.av{flex:none;width:44px;height:44px;border-radius:50%;background:var(--ink) center/cover;color:var(--gold);display:grid;place-items:center;font-weight:700}
+.av.big{width:96px;height:96px;font-size:30px;border:3px solid var(--gold);margin:0 auto}
+.mute{color:var(--mute);font-size:14px}.tag{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:99px;padding:1px 9px;margin:4px 4px 0 0;color:var(--mute)}
+.tag.g{background:var(--gold);color:#14213d;border-color:var(--gold)}
+h2{font:700 20px Georgia,serif;margin:4px 0 12px}h3{margin:0;font-size:16px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;margin:0 0 10px}
+input[type=checkbox]{width:auto;margin:0 6px 0 0}
+button,.btn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 16px;background:var(--gold);color:#14213d;cursor:pointer;display:inline-block}
+.alt{background:transparent!important;color:var(--ink)!important;border:1px solid var(--line)!important}
+.danger{color:var(--red)!important}button:active{transform:scale(.96)}
+.acts{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.pimg{width:100%;max-height:340px;object-fit:cover;border-radius:12px;margin:8px 0}
+.bar{display:flex;gap:6px;border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.bar button{background:none;color:var(--mute);padding:6px 10px;font-size:14px}.bar .on{color:var(--red)}
+.pop{animation:pop .3s}@keyframes pop{50%{transform:scale(1.35)}}
+.cm{font-size:14px;margin:6px 0}.cm b{margin-right:6px}
+nav{display:flex;background:var(--card);border-top:1px solid var(--line)}
+nav button{flex:1;background:none;color:var(--mute);border-radius:0;padding:8px 0 6px;font-size:12px;border-top:3px solid transparent}
+nav button.on{color:var(--ink);border-top-color:var(--gold)}nav button span{display:block;font-size:20px}
+.gate{padding:26px 20px;overflow-y:auto;height:100%}
+.pend{text-align:center;padding-top:60px}.pend .big{font-size:64px;animation:float 3s ease-in-out infinite;display:inline-block}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--onink);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:9}#toast.s{opacity:1}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div id="app"></div><div id="toast"></div>
+<script>
+let S={user:null,posts:[],motd:{t:"",d:0},stats:{},students:[],pending:[],members:[],tab:"home",q:""},A={mode:"login",msg:"",blob:null,url:""},P={blob:null},O={};
+const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ini=n=>(n||"?").split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase();
+const toast=t=>{const e=$("toast");e.textContent=t;e.className="s";setTimeout(()=>e.className="",2400)};
+const ago=t=>{const m=(Date.now()/1000-t)/60;return m<1?"now":m<60?Math.floor(m)+"m":m<1440?Math.floor(m/60)+"h":Math.floor(m/1440)+"d"};
+const T=f=>async(...a)=>{try{await f(...a)}catch(e){toast(e.message)}};
+async function api(a,d){const o={credentials:"same-origin",headers:{"X-Requested-With":"cs2k23"}};
+if(d){o.method="POST";const f=new FormData();for(const k in d)if(d[k]!=null)d[k] instanceof Blob?f.append(k,d[k],"i.jpg"):f.append(k,d[k]);o.body=f}
+const r=await fetch("api.php?a="+a,o);let j={};try{j=await r.json()}catch(e){throw new Error("Server not reachable. Check install and config.")}
+if(r.status===401&&S.user){S.user=null;render()}if(!r.ok)throw new Error(j.error||"Request failed");return j}
+const av=(u,c="")=>u.pic?`<div class="av ${c}" style="background-image:url('${esc(u.pic)}')"></div>`:`<div class="av ${c}">${ini(u.name)}</div>`;
+const val=id=>$(id).value.trim();
+async function load(){const f=await api("feed");S.posts=f.posts;S.motd=f.motd;S.stats=f.stats;
+if(S.tab==="students")S.students=(await api("students")).students;
+if(S.tab==="admin"&&S.user.role==="admin"){const a=await api("admin");S.pending=a.pending;S.members=a.members}}
+async function boot(){try{S.user=(await api("me")).user;if(S.user)await load()}catch(e){toast(e.message)}render()}
+const go=T(async t=>{S.tab=t;await load();render()});
+const register=T(async()=>{const d={name:val("rn"),username:val("ru"),roll:val("rr"),password:$("rp").value,pic:A.blob};
+if(!d.pic){A.msg="A profile picture is required.";return render()}
+try{await api("register",d);A.mode="pending";A.blob=null}catch(e){A.msg=e.message}render()});
+const login=T(async()=>{try{const r=await api("login",{username:val("lu"),roll:val("lr"),password:$("lp").value});if(r.pending){A.mode="pending";return render()}await boot()}catch(e){A.msg=e.message;render()}});
+const logout=T(async()=>{await api("logout",{});S.user=null;A={mode:"login",msg:"",blob:null};render()});
+const setMode=m=>{A.mode=m;A.msg="";render()};
+function pick(el,w){const f=el.files[0];if(!f)return;const im=new Image();im.onload=()=>{const k=Math.min(1,(w==="post"?1000:400)/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+c.toBlob(T(async b=>{if(w==="me"){await api("profile",{city:S.user.city,pos:S.user.pos,job:S.user.job,pic:b});S.user=(await api("me")).user;render();return toast("Photo updated")}
+const url=URL.createObjectURL(b);if(w==="reg")A.blob=b;else P.blob=b;const p=$(w==="reg"?"rpv":"cpv");p.src=url;p.hidden=false}),"image/jpeg",.8)};im.src=URL.createObjectURL(f)}
+const addPost=T(async k=>{const d={kind:k,body:val("pt"),img:P.blob};if(k==="job"){d.title=val("jt");d.loc=val("jl");d.ad=$("ad").checked?1:0}
+await api("post",d);P.blob=null;O.draft="";await load();render();toast(k==="job"?"Vacancy posted":"Posted")});
+const like=T(async id=>{await api("like",{id});O.pop=id;await load();render()});
+const cmt=T(async id=>{const t=val("c"+id);if(!t)return;await api("comment",{id,body:t});O[id]=1;await load();render()});
+const tog=id=>{O[id]=!O[id];render()};
+const del=T(async id=>{if(!confirm("Delete this post?"))return;await api("delete",{id});await load();render();toast("Post deleted")});
+const rep=T(async id=>{await api("report",{id});toast("Reported to admin")});
+const decide=T(async(id,s)=>{await api("decide",{id,status:s});await load();render();toast(s==="approved"?"Member approved":"Request declined")});
+const removeM=T(async id=>{if(!confirm("Remove this member and their posts?"))return;await api("remove",{id});await load();render()});
+const setMotd=T(async()=>{await api("motd",{text:val("mt")});await load();render();toast("Message of the day updated")});
+const saveMe=T(async()=>{await api("profile",{city:val("c"),pos:val("o"),job:val("j")});S.user=(await api("me")).user;toast("Profile saved")});
+const passwd=T(async()=>{const o=prompt("Current password");if(!o)return;const n=prompt("New password (6+ characters)");if(!n)return;await api("passwd",{old:o,new:n});toast("Password changed")});
+const srch=v=>{S.q=v;$("list").innerHTML=students()};
+const adm=()=>S.user.role==="admin";
+function postCard(p){const liked=p.liked,can=adm()||p.user_id==S.user.id,a={name:p.name,pic:p.upic};
+return `<div class="card ${p.is_ad?"ad":""} fade"><div class="row mid">${av(a)}<div style="flex:1"><h3>${esc(p.name)}</h3><span class="mute">${ago(p.ts)}${p.ujob?" · "+esc(p.ujob):""}</span></div>${p.kind==="job"?`<span class="tag g">${p.is_ad?"Sponsored":"Vacancy"}</span>`:""}</div>
+${p.title?`<h3 style="margin-top:10px">💼 ${esc(p.title)}</h3><div class="mute">${esc(p.loc)}</div>`:""}
+${p.body?`<p style="margin:8px 0 0;white-space:pre-wrap">${esc(p.body)}</p>`:""}${p.img?`<img class="pimg" loading="lazy" src="${esc(p.img)}" alt="">`:""}
+<div class="bar"><button class="${liked?"on":""} ${O.pop===p.id?"pop":""}" onclick="like(${p.id})">${liked?"❤️":"🤍"} ${p.lc}</button><button onclick="tog(${p.id})">💬 ${p.cm.length}</button><span style="flex:1"></span>
+${p.user_id!=S.user.id?`<button onclick="rep(${p.id})">⚑</button>`:""}${can?`<button class="danger" onclick="del(${p.id})">🗑</button>`:""}</div>
+${adm()&&p.reports>0?`<div class="mute danger">Reported ${p.reports}×</div>`:""}
+${O[p.id]?`${p.cm.map(c=>`<div class="cm"><b>${esc(c.name)}</b>${esc(c.t)}</div>`).join("")}<div class="row"><input id="c${p.id}" placeholder="Write a comment"><button onclick="cmt(${p.id})">Send</button></div>`:""}</div>`}
+function composer(k){const j=k==="job";return `<div class="card"><textarea id="pt" rows="2" placeholder="${j?"Describe the vacancy":"Share an update with the batch"}">${esc(O.draft||"")}</textarea>${j?`<input id="jt" placeholder="Job title"><input id="jl" placeholder="Company and city"><label class="mute"><input type="checkbox" id="ad">Advertise this vacancy (optional)</label><br><br>`:""}<img id="cpv" class="pimg" hidden alt=""><div class="acts"><label class="btn alt">📷 Add photo<input type="file" hidden accept="image/*" onchange="pick(this,'post')"></label><button onclick="addPost('${k}')">${j?"Post vacancy":"Post"}</button></div></div>`}
+function students(){const q=S.q.toLowerCase(),r=S.students.filter(u=>[u.name,u.city,u.pos,u.job].join(" ").toLowerCase().includes(q));
+return r.length?r.map(u=>`<div class="card row mid fade">${av(u)}<div><h3>${esc(u.name)}</h3><div class="mute">${esc(u.pos||"Position not added")}${u.job?" at "+esc(u.job):""}</div>${u.city?`<span class="tag">📍 ${esc(u.city)}</span>`:""}</div></div>`).join(""):`<p class="mute">No classmates found yet.</p>`}
+const V={
+home:()=>`<div class="hero"><div class="orb" style="width:140px;height:140px;right:-30px;top:-40px"></div><div class="orb" style="width:90px;height:90px;left:40%;bottom:-30px;animation-delay:2s"></div><small>Assalam o Alaikum</small><b>${esc(S.user.name)}</b><div class="motd"><em>Message of the day · ${new Date(S.motd.d*1000).toLocaleDateString()}</em>${esc(S.motd.t)}</div></div>
+<main style="padding-top:14px"><div class="stats"><div class="stat"><b data-n="${S.stats.members}">0</b><span>Members</span></div><div class="stat"><b data-n="${S.stats.posts}">0</b><span>Posts</span></div><div class="stat"><b data-n="${S.stats.jobs}">0</b><span>Vacancies</span></div></div>${composer("post")}${S.posts.map(postCard).join("")||`<p class="mute">No posts yet. Share the first update.</p>`}</main>`,
+students:()=>`<main><h2>Students</h2><input placeholder="Search name, city or job" value="${esc(S.q)}" oninput="srch(this.value)"><div id="list">${students()}</div></main>`,
+jobs:()=>`<main><h2>Jobs and vacancies</h2>${composer("job")}${S.posts.filter(p=>p.kind==="job").sort((a,b)=>b.is_ad-a.is_ad).map(postCard).join("")||`<p class="mute">No vacancies yet.</p>`}</main>`,
+me:()=>{const m=S.user;return `<main><div class="card fade" style="text-align:center">${av(m,"big")}<label class="btn alt" style="margin-top:10px">Change photo<input type="file" hidden accept="image/*" onchange="pick(this,'me')"></label><h2 style="margin-top:12px">${esc(m.name)}</h2><div class="mute">@${esc(m.username)} · Roll ${esc(m.roll)}</div></div>
+<div class="card"><input id="c" placeholder="Current city" value="${esc(m.city)}"><input id="o" placeholder="Position (e.g. Software Engineer)" value="${esc(m.pos)}"><input id="j" placeholder="Current job or company" value="${esc(m.job)}"><div class="acts"><button onclick="saveMe()">Save profile</button><button class="alt" onclick="passwd()">Password</button><button class="alt" onclick="logout()">Log out</button></div></div>
+<p class="mute">Private messaging is disabled. Members connect through posts and comments only.</p></main>`},
+admin:()=>`<main><h2>Admin panel</h2><div class="card"><h3>Message of the day</h3><p class="mute">Shown on every member's home screen.</p><textarea id="mt" rows="2">${esc(S.motd.t)}</textarea><button onclick="setMotd()">Publish message</button></div>
+<h3 style="margin:14px 0 8px">Membership requests (${S.pending.length})</h3>${S.pending.map(u=>`<div class="card"><div class="row mid">${av(u)}<div><h3>${esc(u.name)}</h3><div class="mute">@${esc(u.username)} · Roll ${esc(u.roll)}</div></div></div><div class="acts" style="margin-top:10px"><button onclick="decide(${u.id},'approved')">Approve</button><button class="alt danger" onclick="decide(${u.id},'rejected')">Decline</button></div></div>`).join("")||`<p class="mute">No pending requests.</p>`}
+<h3 style="margin:14px 0 8px">Members (${S.members.length})</h3>${S.members.map(u=>`<div class="card row mid">${av(u)}<div style="flex:1"><h3>${esc(u.name)}</h3><div class="mute">Roll ${esc(u.roll)}</div></div><button class="alt danger" onclick="removeM(${u.id})">Remove</button></div>`).join("")}
+<p class="mute">To delete a post, open Home and tap 🗑 on it.</p></main>`};
+function render(){const a=$("app"),d=$("pt");if(d)O.draft=d.value;
+if(!S.user){
+if(A.mode==="pending"){a.innerHTML=`<div class="gate pend"><div class="big">⏳</div><h2>Waiting for admin approval</h2><p class="mute">Your request is with the batch admin. Log in again once you are approved.</p><button onclick="setMode('login')">Back to login</button></div>`;return}
+const reg=A.mode==="reg";
+a.innerHTML=`<div class="gate fade"><div class="hero" style="margin:-26px -20px 18px;padding-bottom:30px"><div class="orb" style="width:130px;height:130px;right:-20px;top:-30px"></div><b style="font-size:36px">🎓 CS-2K23</b><small>One Batch. One Community. Forever.</small></div><h2>${reg?"Request to join":"Welcome back"}</h2>
+${reg?`<div class="row mid" style="margin-bottom:10px"><img id="rpv" class="av" ${A.url?`src="${A.url}"`:"hidden"} alt=""><label class="btn alt">📷 Profile picture (required)<input type="file" hidden accept="image/*" onchange="pick(this,'reg')"></label></div><input id="rn" placeholder="Full name">`:""}
+<input id="${reg?"ru":"lu"}" placeholder="Username" autocapitalize="none"><input id="${reg?"rr":"lr"}" placeholder="Roll number"><input id="${reg?"rp":"lp"}" type="password" placeholder="Password">
+${A.msg?`<p class="danger" style="margin:0 0 10px">${esc(A.msg)}</p>`:""}
+<button style="width:100%" onclick="${reg?"register()":"login()"}">${reg?"Send request":"Log in"}</button><p class="mute" style="text-align:center">${reg?"Already approved?":"New batch member?"} <a href="#" onclick="setMode('${reg?"login":"reg"}');return false" style="color:var(--ink)">${reg?"Log in":"Request to join"}</a></p></div>`;return}
+const tabs=[["home","🏠","Home"],["students","🎓","Students"],["jobs","💼","Jobs"],["me","👤","Profile"]];if(adm())tabs.push(["admin","🛡️","Admin"]);
+if(!V[S.tab])S.tab="home";
+a.innerHTML=`<div class="fade" style="flex:1;display:flex;flex-direction:column;overflow-y:auto">${V[S.tab]()}</div><nav>${tabs.map(t=>`<button class="${S.tab===t[0]?"on":""}" onclick="go('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join("")}</nav>`;
+document.querySelectorAll("[data-n]").forEach(e=>{const n=+e.dataset.n;let i=0;const t=setInterval(()=>{i++;e.textContent=Math.round(n*i/20);if(i>=20)clearInterval(t)},30)});O.pop=0}
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+boot();
+</script></body></html>
